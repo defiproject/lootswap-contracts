@@ -12,3 +12,5 @@ coverage.json
 .env
 .DS_Store
 yarn-error.log
+migrations/
+.vscode/settings.json

@@ -9,8 +9,8 @@ import { createLpToken } from './shared/lp'
 import Pit from '../build/Pit.json'
 import PitBreeder from '../build/PitBreeder.json'
 import ERC20Mock from '../build/ERC20Mock.json'
-import UniswapV2Factory from '@venomswap/core/build/UniswapV2Factory.json'
-import UniswapV2Pair from '@venomswap/core/build/UniswapV2Pair.json'
+import UniswapV2Factory from '@lootswap/core/build/UniswapV2Factory.json'
+import UniswapV2Pair from '@lootswap/core/build/UniswapV2Pair.json'
 import PitBreederExploitMock from '../build/PitBreederExploitMock.json'
 
 chai.use(solidity)

@@ -53,9 +53,9 @@ contract MasterBreeder is Ownable, Authorizable, ReentrancyGuard {
     // Info of each pool.
     struct PoolInfo {
         IERC20 lpToken; // Address of LP token contract.
-        uint256 allocPoint; // How many allocation points assigned to this pool. GovernanceTokens to distribute per block.
-        uint256 lastRewardBlock; // Last block number that GovernanceTokens distribution occurs.
-        uint256 accGovTokenPerShare; // Accumulated GovernanceTokens per share, times 1e12. See below.
+        uint256 allocPoint; 
+        uint256 lastRewardBlock; 
+        uint256 accGovTokenPerShare;
     }
 
     // The Governance token
@@ -247,28 +247,24 @@ contract MasterBreeder is Ownable, Authorizable, ReentrancyGuard {
         pool.lastRewardBlock = block.number;
         if (GovTokenForDev > 0) {
             govToken.mint(address(devaddr), GovTokenForDev);
-            //Dev fund has xx% locked during the starting bonus period. After which locked funds drip out linearly each block over 3 years.
             if (block.number <= FINISH_BONUS_AT_BLOCK) {
                 govToken.lock(address(devaddr), GovTokenForDev.mul(75).div(100));
             }
         }
         if (GovTokenForLP > 0) {
             govToken.mint(liquidityaddr, GovTokenForLP);
-            //LP + Partnership fund has only xx% locked over time as most of it is needed early on for incentives and listings. The locked amount will drip out linearly each block after the bonus period.
             if (block.number <= FINISH_BONUS_AT_BLOCK) {
                 govToken.lock(address(liquidityaddr), GovTokenForLP.mul(45).div(100));
             }
         }
         if (GovTokenForCom > 0) {
             govToken.mint(comfundaddr, GovTokenForCom);
-            //Community Fund has xx% locked during bonus period and then drips out linearly over 3 years.
             if (block.number <= FINISH_BONUS_AT_BLOCK) {
                 govToken.lock(address(comfundaddr), GovTokenForCom.mul(85).div(100));
             }
         }
         if (GovTokenForFounders > 0) {
             govToken.mint(founderaddr, GovTokenForFounders);
-            //The Founders reward has xx% of their funds locked during the bonus period which then drip out linearly per block over 3 years.
             if (block.number <= FINISH_BONUS_AT_BLOCK) {
                 govToken.lock(address(founderaddr), GovTokenForFounders.mul(95).div(100));
             }
@@ -627,11 +623,9 @@ contract MasterBreeder is Ownable, Authorizable, ReentrancyGuard {
         }
     }
 
-    // Withdraw without caring about rewards. EMERGENCY ONLY. This has the same 25% fee as same block withdrawals to prevent abuse of thisfunction.
     function emergencyWithdraw(uint256 _pid) public nonReentrant {
         PoolInfo storage pool = poolInfo[_pid];
         UserInfo storage user = userInfo[_pid][msg.sender];
-        //reordered from Sushi function to prevent risk of reentrancy
         uint256 amountToSend = user.amount.mul(75).div(100);
         uint256 devToSend = user.amount.mul(25).div(100);
         user.amount = 0;
